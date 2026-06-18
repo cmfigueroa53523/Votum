@@ -12,7 +12,7 @@ const reasonRequiredMap: { [index: string]: keyof CouncilData } = {
 }
 
 export default class VoteAliasCommand extends Command {
-  protected state: 1 | 0 | -1
+  protected state!: 1 | 0 | -1
 
   async execute(msg: CommandoMessage, args: any): Promise<Message | Message[]> {
     if (!this.council.currentMotion) {

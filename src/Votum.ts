@@ -34,7 +34,7 @@ class Votum {
       //   "WEBHOOKS_UPDATE",
       // ] as any,
       ws: {
-        intents: ["GUILD_MEMBERS", "GUILDS", "GUILD_MESSAGES"],
+        intents: ["GUILDS", "GUILD_MESSAGES"],
       },
       commandEditableDuration: 120,
     })

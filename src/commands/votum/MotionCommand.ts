@@ -27,8 +27,6 @@ export default class MotionCommand extends Command {
   }
 
   async execute(msg: CommandoMessage, args: any): Promise<Message | Message[]> {
-    await msg.guild.members.fetch() // Privileged intents fix
-
     if (!args.text) {
       if (this.council.currentMotion) {
         return this.council.currentMotion.postMessage()

@@ -6,11 +6,18 @@
 		"strictNullChecks": true,
 		"noUnusedLocals": true,
 		"moduleResolution": "node",
+		"ignoreDeprecations": "6.0",
+		"skipLibCheck": true,
 		"sourceMap": true,
+		"rootDir": "./src",
 		"outDir": "dist",
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
+		"types": [
+			"node",
+			"jest"
+		],
 		"lib": [
 			"es2015",
 			"es2017"

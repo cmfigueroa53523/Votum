@@ -51,7 +51,6 @@ export default class StatsCommand extends Command {
   }
 
   async execute(msg: CommandoMessage, args: any): Promise<Message | Message[]> {
-    await msg.guild.members.fetch() // Privileged intents fix
     const lastVoted: { [index: string]: number } = {}
     const lastMotion: { [index: string]: number } = {}
     const mostMotions: { [index: string]: number } = {}

@@ -19,7 +19,7 @@ export default class Command extends Commando.Command {
   public councilOnly: boolean
   public adminOnly: boolean
   public adminsAlwaysAllowed: boolean
-  protected council: Council
+  protected council!: Council
   private customInfo: CustomCommandInfo
 
   constructor(client: Commando.CommandoClient, customInfo: CustomCommandInfo) {

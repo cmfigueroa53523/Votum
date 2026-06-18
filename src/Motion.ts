@@ -317,8 +317,6 @@ export default class Motion {
     text?: string | true,
     channel?: TextChannel
   ): Promise<Message | Message[]> {
-    await this.council.channel.guild.members.fetch() // Privileged intents fix
-
     this.createDeliberationChannel()
 
     this.weights = await this.council.calculateWeights()

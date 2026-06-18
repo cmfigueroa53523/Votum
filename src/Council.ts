@@ -19,9 +19,9 @@ export default class Council {
 
   public id: Snowflake
   public channel: TextChannel
-  private data: CouncilData
+  private data!: CouncilData
   private dataPath: string
-  private initPromise: Promise<unknown>
+  private initPromise!: Promise<unknown>
 
   constructor(channel: TextChannel) {
     this.channel = channel

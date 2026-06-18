@@ -131,8 +131,6 @@ export async function forwardMotion(
     return
   }
 
-  await targetCouncil.channel.guild.members.fetch()
-
   const motionData = JSON.parse(JSON.stringify(motion.getData()))
 
   if (optionsString) {
