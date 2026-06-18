@@ -64,10 +64,6 @@ function normalizeReply(payload: ReplyPayload, options?: any) {
   return { ...(payload || {}), ...(options || {}) }
 }
 
-function findSubcommand(options?: SlashOption[]) {
-  return options?.find((option) => option.type === 1)
-}
-
 function chunkText(text: string, size = 1900) {
   const chunks: string[] = []
 
@@ -222,6 +218,70 @@ export default class SlashCommands {
   public get commandData() {
     return [
       {
+        name: "council",
+        description: "Create, rename, or remove the council in this channel.",
+        options: [
+          { type: 3, name: "name", description: "Council name", required: false },
+          { type: 5, name: "remove", description: "Remove the council", required: false },
+        ],
+      },
+      {
+        name: "config",
+        description: "View or change a council setting.",
+        options: [
+          { type: 3, name: "key", description: "Setting name", required: false },
+          { type: 3, name: "value", description: "New value", required: false },
+          { type: 5, name: "remove", description: "Reset the setting", required: false },
+        ],
+      },
+      {
+        name: "motion",
+        description: "Create, view, or kill the current motion.",
+        options: [
+          { type: 3, name: "text", description: "Motion text", required: false },
+          { type: 5, name: "kill", description: "Kill the current motion", required: false },
+        ],
+      },
+      {
+        name: "yes",
+        description: "Vote yes on the current motion.",
+        options: [{ type: 3, name: "reason", description: "Reason for your vote", required: false }],
+      },
+      {
+        name: "no",
+        description: "Vote no on the current motion.",
+        options: [{ type: 3, name: "reason", description: "Reason for your vote", required: false }],
+      },
+      {
+        name: "abstain",
+        description: "Abstain on the current motion.",
+        options: [{ type: 3, name: "reason", description: "Reason for your vote", required: false }],
+      },
+      {
+        name: "archive",
+        description: "View or export the council archive.",
+        options: [
+          { type: 3, name: "range", description: "Motion number, range, or export", required: false },
+          { type: 5, name: "export", description: "Export the full archive", required: false },
+        ],
+      },
+      {
+        name: "pinginactive",
+        description: "Mention councilors who have not voted yet.",
+      },
+      {
+        name: "setweight",
+        description: "Set the vote weight of a council member or role.",
+        options: [
+          { type: 3, name: "target", description: "Member or role mention/id", required: false },
+          { type: 10, name: "weight", description: "Vote weight", required: false },
+        ],
+      },
+      {
+        name: "stats",
+        description: "Show council statistics.",
+      },
+      {
         name: "votum",
         description: "Votum slash commands.",
         options: [
@@ -328,12 +388,14 @@ export default class SlashCommands {
   }
 
   public async handleInteraction(interaction: SlashInteraction) {
-    if (interaction.data.name !== "votum") {
-      return
-    }
+    const usingGroup = interaction.data.name === "votum"
+    const subcommand = usingGroup
+      ? interaction.data.options?.find((option) => option.type === 1)
+      : null
+    const commandName = usingGroup ? subcommand?.name : interaction.data.name
+    const options = usingGroup ? subcommand?.options || [] : interaction.data.options || []
 
-    const subcommand = findSubcommand(interaction.data.options)
-    if (!subcommand) {
+    if (!commandName) {
       return
     }
 
@@ -357,14 +419,14 @@ export default class SlashCommands {
       channel,
       author,
       member,
-      command: { name: subcommand.name },
-      cleanContent: `/${subcommand.name}`,
-      content: `/${subcommand.name}`,
+      command: { name: commandName },
+      cleanContent: `/${commandName}`,
+      content: `/${commandName}`,
       reply: (payload: ReplyPayload, options?: any) => responder.reply(payload, options),
     }
 
-    const args = this.buildArgs(subcommand.name, subcommand.options || [])
-    const command = this.commands[subcommand.name as keyof typeof this.commands]
+    const args = this.buildArgs(commandName, options)
+    const command = this.commands[commandName as keyof typeof this.commands]
 
     if (!command) {
       await responder.reply("Unknown command.")
