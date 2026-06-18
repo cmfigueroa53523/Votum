@@ -341,11 +341,14 @@ export default class SlashCommands {
     }
 
     const member = this.buildMember(interaction, guild)
+    const author =
+      (await this.client.users.fetch(interaction.member.user.id).catch(() => null)) ||
+      interaction.member.user
     const fakeMessage: any = {
       client: this.client,
       guild,
       channel,
-      author: interaction.member.user,
+      author,
       member,
       command: { name: subcommand.name },
       cleanContent: `/${subcommand.name}`,
