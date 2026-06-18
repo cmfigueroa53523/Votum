@@ -1,5 +1,6 @@
 import { Collection, Permissions } from "discord.js"
 import { CommandoClient } from "discord.js-commando"
+import { ConfigurableCouncilDataSerializers } from "./CouncilData"
 import ArchiveCommand from "./commands/votum/ArchiveCommand"
 import AbstainCommand from "./commands/votum/AbstainCommand"
 import ConfigCommand from "./commands/votum/ConfigCommand"
@@ -55,6 +56,12 @@ const API_BASE = "https://discord.com/api/v9"
 const fetchApi: any = (globalThis as any).fetch
 const FormDataApi: any = (globalThis as any).FormData
 const BlobApi: any = (globalThis as any).Blob
+const configKeyChoices = Object.keys(ConfigurableCouncilDataSerializers).map(
+  (key) => ({
+    name: key,
+    value: key,
+  })
+)
 
 function normalizeReply(payload: ReplyPayload, options?: any) {
   if (typeof payload === "string") {
@@ -229,7 +236,13 @@ export default class SlashCommands {
         name: "config",
         description: "View or change a council setting.",
         options: [
-          { type: 3, name: "key", description: "Setting name", required: false },
+          {
+            type: 3,
+            name: "key",
+            description: "Setting name",
+            required: false,
+            choices: configKeyChoices,
+          },
           { type: 3, name: "value", description: "New value", required: false },
           { type: 5, name: "remove", description: "Reset the setting", required: false },
         ],
@@ -299,7 +312,13 @@ export default class SlashCommands {
             name: "config",
             description: "View or change a council setting.",
             options: [
-              { type: 3, name: "key", description: "Setting name", required: false },
+              {
+                type: 3,
+                name: "key",
+                description: "Setting name",
+                required: false,
+                choices: configKeyChoices,
+              },
               { type: 3, name: "value", description: "New value", required: false },
               { type: 5, name: "remove", description: "Reset the setting", required: false },
             ],

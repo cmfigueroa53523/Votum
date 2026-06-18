@@ -34,7 +34,7 @@ export default class ConfigCommand extends Command {
     super(client, {
       name: "config",
       aliases: ["votumconfig", "cfg", "vconfig", "vcfg", "councilconfig"],
-      description: "Designates a specific role for councilors.",
+      description: "View or change a council setting.",
       adminOnly: true,
 
       args: [
@@ -60,14 +60,22 @@ export default class ConfigCommand extends Command {
     args: ConfigArguments
   ): Promise<Message | Message[]> {
     if (args.key.length === 0) {
+      const keys = Object.keys(getProps(ConfigurableCouncilData)).sort()
+
       return msg.reply(
         response(
           ResponseType.Neutral,
-          `Available configuration points are:\n${Object.keys(
-            getProps(ConfigurableCouncilData)
-          )
-            .map((n) => `~${n}~`)
-            .join(",\n ")}.`
+          `Available configuration points are:\n${keys
+            .map((key) => {
+              const configKey = key as keyof ConfigurableCouncilData
+              const serializer = ConfigurableCouncilDataSerializers[configKey]
+              const currentValue = makeDisplay(serializer.display)(
+                this.council.getConfig(configKey)
+              )
+
+              return `~${key}~ (${serializer.type}) = ${currentValue}`
+            })
+            .join("\n")}`
         )
       )
     }
@@ -92,9 +100,9 @@ export default class ConfigCommand extends Command {
       return msg.reply(
         response(
           ResponseType.Neutral,
-          `Configuration point ${args.key} is currently set to ~${display(
+          `Configuration point ~${key}~ is currently set to ~${display(
             this.council.getConfig(key)
-          )}~.`
+          )}~. Use "/config ${key} <value>" or "!config ${key} <value>" to change it.`
         )
       )
     }
