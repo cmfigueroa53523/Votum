@@ -43,16 +43,20 @@ class Votum {
 
     this.councilMap = new Map()
     this.registerCommands()
+    this.slashCommands = new SlashCommands(this.bot)
 
-    ;(this.bot.ws as any).on("INTERACTION_CREATE", (interaction: any) => {
-      this.slashCommands.handleInteraction(interaction).catch(console.error)
+    this.bot.on("raw", (packet: any) => {
+      if (packet.t !== "INTERACTION_CREATE") {
+        return
+      }
+
+      this.slashCommands.handleInteraction(packet.d).catch(console.error)
     })
 
     this.bot.on("ready", () => {
       console.log("Votum is ready.")
 
       this.setActivity()
-      this.slashCommands = new SlashCommands(this.bot)
       this.slashCommands.register().catch(console.error)
       setInterval(this.setActivity.bind(this), 1000000)
     })

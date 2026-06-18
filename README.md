@@ -1,7 +1,7 @@
 <p align="center">
-  <a href="https://discordapp.com/oauth2/authorize?client_id=430737691454341130&scope=bot&permissions=85000"><img src="https://i.imgur.com/pnEEVdz.png" alt="Votum" /></a>
+  <a href="https://discordapp.com/oauth2/authorize?client_id=430737691454341130&scope=bot%20applications.commands&permissions=85000"><img src="https://i.imgur.com/pnEEVdz.png" alt="Votum" /></a>
   <br>
-  <a href="https://discordapp.com/oauth2/authorize?client_id=430737691454341130&scope=bot&permissions=402656264"><img src="https://i.imgur.com/2UBikON.png" alt="Add" /></a>
+  <a href="https://discordapp.com/oauth2/authorize?client_id=430737691454341130&scope=bot%20applications.commands&permissions=402656264"><img src="https://i.imgur.com/2UBikON.png" alt="Add" /></a>
   <br>
   <a href="https://github.com/evaera/Votum">View Source on GitHub</a>
   <br><br>
