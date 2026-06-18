@@ -142,7 +142,7 @@ class InteractionResponder {
   }
 
   private async sendOriginal(payload: any) {
-    return this.sendWebhook("PATCH", "@original", payload)
+    return this.sendWebhook("PATCH", "messages/@original", payload)
   }
 
   private async sendFollowup(payload: any) {
