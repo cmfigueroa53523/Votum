@@ -31,15 +31,22 @@ export default class SetWeightCommand extends Command {
   async execute(msg: CommandoMessage, args: any): Promise<Message | Message[]> {
     const weights = this.council.getVoteWeights() || {}
 
+    const target =
+      args.target === ""
+        ? null
+        : typeof args.target === "string"
+        ? { id: args.target, toString: () => args.target }
+        : args.target
+
     if (args.target !== "" && typeof args.weight === "number") {
       if (args.weight < 0) {
         return msg.reply("Weight must not be less than zero")
       }
 
       if (args.weight === 1) {
-        delete weights[args.target.id]
+        delete weights[target.id]
       } else {
-        weights[args.target.id] = args.weight
+        weights[target.id] = args.weight
       }
 
       this.council.setConfig("voteWeights", weights)
@@ -62,7 +69,7 @@ export default class SetWeightCommand extends Command {
     }
 
     return msg.reply(
-      (args.target ? `Set ${args.target}'s weight to ${args.weight}.\n` : "") +
+      (target ? `Set ${target}'s weight to ${args.weight}.\n` : "") +
         `\n${lines.join("\n")}`,
       {
         split: true,

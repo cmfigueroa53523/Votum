@@ -36,12 +36,9 @@ export default class Council {
   }
 
   public async initialize(): Promise<unknown> {
-    if (this.initPromise) return this.initPromise
-
-    this.initPromise = this.channel.guild.members
-      .fetch()
-      .then((members) => console.log(`fetched ${members.size} members`))
-      .catch(() => undefined)
+    if (!this.initPromise) {
+      this.initPromise = Promise.resolve()
+    }
 
     return this.initPromise
   }
