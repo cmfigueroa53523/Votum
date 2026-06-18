@@ -114,10 +114,17 @@ class InteractionResponder {
       const chunks = chunkText(normalized.content)
 
       if (chunks.length === 0) {
-        return this.reply({ ...normalized, content: "" })
+        return this.sendOriginal({ ...normalized, content: "" })
       }
 
-      await this.reply({ ...normalized, content: chunks.shift() })
+      const firstChunk = chunks.shift() || ""
+
+      if (!this.acknowledged) {
+        await this.defer()
+      }
+
+      this.replied = true
+      await this.sendOriginal({ ...normalized, content: firstChunk, split: undefined })
 
       for (const chunk of chunks) {
         await this.sendFollowup({ ...normalized, content: chunk, split: undefined })
