@@ -373,18 +373,32 @@ export default class SlashCommands {
     if (!appId) return
 
     const guildId = process.env.SLASH_GUILD_ID || process.env.GUILD_ID
-    const endpoint = guildId
-      ? `${API_BASE}/applications/${appId}/guilds/${guildId}/commands`
-      : `${API_BASE}/applications/${appId}/commands`
+    const headers = {
+      Authorization: `Bot ${process.env.TOKEN}`,
+      "Content-Type": "application/json",
+    }
 
-    await fetchApi(endpoint, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bot ${process.env.TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.commandData),
-    })
+    if (guildId) {
+      await fetchApi(
+        `${API_BASE}/applications/${appId}/guilds/${guildId}/commands`,
+        {
+          method: "PUT",
+          headers,
+          body: JSON.stringify(this.commandData),
+        }
+      )
+      return
+    }
+
+    await Promise.all(
+      [...this.client.guilds.cache.values()].map((guild) =>
+        fetchApi(`${API_BASE}/applications/${appId}/guilds/${guild.id}/commands`, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify(this.commandData),
+        })
+      )
+    )
   }
 
   public async handleInteraction(interaction: SlashInteraction) {
